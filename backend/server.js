@@ -25,7 +25,18 @@ async function verifyConnection() {
 // Llama a la función de verificación al iniciar el servidor
 verifyConnection();
 
-// Resto de tu código de endpoints
+// Endpoint para listar las bases de datos
+app.get('/api/databases', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT datname FROM pg_database WHERE datistemplate = false;");
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error al obtener la lista de bases de datos:', error);
+    res.status(500).json({ error: 'Error al obtener la lista de bases de datos' });
+  }
+});
+
+// Endpoint para obtener los datos de la tabla 'gastro'
 app.get('/api/gastro', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM gastro');
